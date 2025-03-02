@@ -30,12 +30,13 @@
   align-items: center;
   margin-bottom: 2rem;
   position: relative;
+  width: 100%;
 }
 
 .game-header h1 {
   font-size: 2.5rem;
   color: #2c3e50;
-  margin: 1.5rem 0 0.5rem 0;
+  margin: 0.5rem 0;
   animation: fadeInDown 0.8s ease-out;
 }
 
@@ -58,6 +59,31 @@
 .back-btn:hover {
   text-decoration: underline;
   transform: translateX(-3px);
+}
+
+.score-display {
+  position: absolute;
+  right: 0;
+  top: 0;
+  background-color: #4a6fa5;
+  color: white;
+  padding: 0.5rem 1.2rem;
+  border-radius: 50px;
+  font-weight: 600;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  animation: fadeInRight 0.8s ease-out;
+}
+
+.score-label {
+  font-size: 0.9rem;
+  opacity: 0.9;
+}
+
+.score-value {
+  font-size: 1.2rem;
 }
 
 .game-content {
@@ -267,7 +293,7 @@
 }
 
 .result-section.gave-up {
-  background-color: #f7fafc;
+  background-color: #ffecec71;
   border: 2px solid #fc8181;
 }
 
@@ -572,6 +598,17 @@
   }
 }
 
+@keyframes fadeInRight {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
 @keyframes slideInLeft {
   from {
     opacity: 0;
@@ -619,6 +656,13 @@
   
   .game-header h1 {
     font-size: 2rem;
+    margin-top: 2.5rem;
+  }
+  
+  .score-display {
+    position: relative;
+    margin-top: 1rem;
+    right: auto;
   }
   
   .facts-grid {

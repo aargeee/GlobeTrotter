@@ -60,7 +60,7 @@ class Game(models.Model):
         high_score = None
         for game in games:
             score = game.get_score()
-            high_score = score if high_score is None or score.percentage > high_score.percentage else high_score
+            high_score = score if high_score is None or score.correct_answers > high_score.correct_answers else high_score
         return high_score
     
     @classmethod

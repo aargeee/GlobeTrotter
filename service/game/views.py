@@ -111,7 +111,7 @@ class ProfileView(APIView):
         user_high_score = Game.get_player_high_score(user)
         return Response({
             'username': user.username,
-            'high_score': user_high_score.percentage if user_high_score else 0,
+            'high_score': user_high_score.correct_answers if user_high_score else 0,
             'games_played': Game.objects.filter(player=user).count(),
         }, status=status.HTTP_200_OK)
 
@@ -298,7 +298,7 @@ class GameHighScoreView(APIView):
             score = game.get_score()
             return Response({
                 'username': game.player.username,
-                'high_score': score.percentage,
+                'high_score': score.correct_answers,
             }, status=status.HTTP_200_OK)
         return Response({
             'username': None,
@@ -323,7 +323,7 @@ class GameHighScoreUserView(APIView):
         user_high_score = Game.get_player_high_score(user)
         return Response({
             'username': user.username,
-            'high_score': user_high_score.percentage if user_high_score else 0,
+            'high_score': user_high_score.correct_answers if user_high_score else 0,
         }, status=status.HTTP_200_OK)
 
 class ListCitiesView(APIView):

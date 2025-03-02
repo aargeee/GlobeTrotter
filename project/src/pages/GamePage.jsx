@@ -18,21 +18,21 @@ function GamePage() {
   const [correctAnswer, setCorrectAnswer] = useState('');
   const [animationClass, setAnimationClass] = useState('');
   const [isActive, setIsActive] = useState(true);
+  const [score, setScore] = useState(0);
 
   // Fetch clues and cities from backend
   useEffect(() => {
     fetchGameData();
+    fetchGameScore();
   }, [game_id]);
 
-  useEffect(
-    () => {
-      if (isActive) {
-        setGameState('playing');
-      } else {
-        setGameState('inactive');
-      }
-    }, [isActive]
-  )
+  useEffect(() => {
+    if (!isActive || clues.length === 0) {
+      setGameState('inactive');
+    } else {
+      setGameState('playing');
+    }
+  }, [isActive, clues]);
 
   const fetchGameData = async () => {
     try {
@@ -55,12 +55,21 @@ function GamePage() {
     }
   };
 
+  const fetchGameScore = async () => {
+    try {
+      const data = await apiService.getGameScore(game_id); // Pass game_id to the service
+      setScore(data.correct_answers);
+    } catch (error) {
+      console.error('Failed to fetch game score:', error);
+    }
+  };
+
   const handleNext = async () => {
     // Fetch new game data for the next question
     await fetchGameData();
+    await fetchGameScore();
     setSelectedCity('');
     setSearchTerm('');
-    setGameState('playing');
   };
 
   // Filter cities based on search term
@@ -92,6 +101,9 @@ function GamePage() {
       setFacts(result.fun_facts)
       setTrivia(result.trivia)
       setCorrectAnswer(result.correct_city)
+      
+      const newScore = await apiService.getGameScore(game_id)
+      setScore(newScore.correct_answers)
 
       if (result.is_answered_correctly) {
         setAnimationClass('fade-out')
@@ -102,26 +114,13 @@ function GamePage() {
       } else {
         setAnimationClass('shake')
         setTimeout(() => {
-          setGameState('gaveUp')
+          setGameState('incorrect')  // Change 'gaveUp' to 'incorrect'
           setAnimationClass('fade-in')
         }, 600)
       }
     } catch (error) {
       console.error('Error checking answer:', error)
     }
-  }
-
-const handlePlayAgain = async () => {
-    // Reset the game
-    setAnimationClass('fade-out')
-    setTimeout(() => {
-      setSelectedCity('')
-      setSearchTerm('')
-      setFilteredCities(cities)
-      setGameState('playing')
-      setAnimationClass('fade-in')
-    }, 500)
-    await fetchGameData();
   }
 
   const handleBackToHome = () => {
@@ -149,6 +148,8 @@ const handlePlayAgain = async () => {
     )
   }
 
+  console.log(gameState)
+
   return (
     <div className="game-page">
       {/* Floating background elements */}
@@ -159,8 +160,11 @@ const handlePlayAgain = async () => {
       <div className="game-header">
         <button className="back-btn" onClick={handleBackToHome}>← Back to Home</button>
         <h1>Globetrotter Challenge</h1>
+        <div className="score-display">
+          <span className="score-label">Score:</span>
+          <span className="score-value">{score}</span>
+        </div>
       </div>
-
       <div className={`game-content ${animationClass}`}>
         {gameState === 'playing' && isActive && (
           <>
@@ -212,7 +216,7 @@ const handlePlayAgain = async () => {
           </>
         )}
 
-        {gameState === 'inactive' && (
+        {((gameState === 'inactive') || (gameState === 'active' && clues.length === 0)) && (
           <div className="result-section inactive">
             <div className="inactive-icon">🌎</div>
             <h2>You've Explored It All!</h2>
@@ -265,7 +269,7 @@ const handlePlayAgain = async () => {
           </div>
         )}
 
-        {gameState === 'gaveUp' && (
+        {gameState === 'incorrect' && (
           <div className="result-section gave-up">
             <h2>The answer was {correctAnswer}</h2>
             

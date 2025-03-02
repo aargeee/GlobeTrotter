@@ -55,6 +55,20 @@ const apiService = {
     return response.data;
   },
 
+  // Get game clues and data
+  getGameScore: async (game_id) => {
+    const accessToken = localStorage.getItem('access_token');
+    if (!accessToken) {
+      throw new Error('No access token available');
+    }
+    const response = await axios.get(`http://localhost:8000/api/game/${game_id}/score/`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      }
+    });
+    return response.data;
+  },
+
   getCitiesList: async () => {
     const accessToken = localStorage.getItem('access_token');
     const response = await axios.get('http://localhost:8000/api/cities/', {
