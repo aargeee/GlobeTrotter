@@ -1,5 +1,7 @@
 import axios from 'axios';
 
+const BASE_URL = 'https://aargeee2.pythonanywhere.com';
+
 // Mock user data
 const mockUserData = {
   username: "traveler2025",
@@ -11,7 +13,7 @@ const mockUserData = {
 const apiService = {
   // Fetch token
   fetchToken: async () => {
-    const response = await axios.post('http://localhost:8000/api/token/');
+    const response = await axios.post(`${BASE_URL}/api/token/`);
     const { access, refresh } = response.data;
     localStorage.setItem('access_token', access);
     localStorage.setItem('refresh_token', refresh);
@@ -24,7 +26,7 @@ const apiService = {
     if (!refreshToken) {
       throw new Error('No refresh token available');
     }
-    const response = await axios.post('http://localhost:8000/api/token/refresh/', { refresh: refreshToken });
+    const response = await axios.post(`${BASE_URL}/api/token/refresh/`, { refresh: refreshToken });
     const { access } = response.data;
     localStorage.setItem('access_token', access);
     return access;
@@ -33,7 +35,7 @@ const apiService = {
   // Start a new game
   startNewGame: async () => {
     const accessToken = localStorage.getItem('access_token');
-    const response = await axios.post('http://localhost:8000/api/game/', {}, {
+    const response = await axios.post(`${BASE_URL}/api/game/`, {}, {
       headers: {
         Authorization: `Bearer ${accessToken}`
       }
@@ -47,7 +49,7 @@ const apiService = {
     if (!accessToken) {
       throw new Error('No access token available');
     }
-    const response = await axios.get(`http://localhost:8000/api/game/${game_id}/questions/`, {
+    const response = await axios.get(`${BASE_URL}/api/game/${game_id}/questions/`, {
       headers: {
         Authorization: `Bearer ${accessToken}`
       }
@@ -61,7 +63,7 @@ const apiService = {
     if (!accessToken) {
       throw new Error('No access token available');
     }
-    const response = await axios.get(`http://localhost:8000/api/game/${game_id}/score/`, {
+    const response = await axios.get(`${BASE_URL}/api/game/${game_id}/score/`, {
       headers: {
         Authorization: `Bearer ${accessToken}`
       }
@@ -71,7 +73,7 @@ const apiService = {
 
   getCitiesList: async () => {
     const accessToken = localStorage.getItem('access_token');
-    const response = await axios.get('http://localhost:8000/api/cities/', {
+    const response = await axios.get(`${BASE_URL}/api/cities/`, {
       headers: {
         Authorization: `Bearer ${accessToken}`
       }
@@ -82,7 +84,7 @@ const apiService = {
   // Get high score data
   getHighScore: async (referrer) => {
     const accessToken = localStorage.getItem('access_token');
-    const url = referrer ? `http://localhost:8000/api/game/high_score/${referrer}` : 'http://localhost:8000/api/game/high_score';
+    const url = referrer ? `${BASE_URL}/api/game/high_score/${referrer}` : `${BASE_URL}/api/game/high_score`;
     const response = await axios.get(url, {
       headers: {
         Authorization: `Bearer ${accessToken}`
@@ -97,7 +99,7 @@ const apiService = {
     
     // Real implementation would be:
     const accessToken = localStorage.getItem('access_token');
-    const response = await axios.get(`http://localhost:8000/api/profile/`, {
+    const response = await axios.get(`${BASE_URL}/api/profile/`, {
       headers: {
       Authorization: `Bearer ${accessToken}`
       }
@@ -108,7 +110,7 @@ const apiService = {
   // Update user profile
   updateUserProfile: async (userData) => {
     const accessToken = localStorage.getItem('access_token');
-    const response = await axios.post('http://localhost:8000/api/signup/', userData, {
+    const response = await axios.post(`${BASE_URL}/api/signup/`, userData, {
       headers: {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${accessToken}`
@@ -123,7 +125,7 @@ const apiService = {
   // Check answer
   checkAnswer: async (game_id, answer) => {
     const accessToken = localStorage.getItem('access_token');
-    const response = await axios.post(`http://localhost:8000/api/game/${game_id}/response/`, { 'city': answer }, {
+    const response = await axios.post(`${BASE_URL}/api/game/${game_id}/response/`, { 'city': answer }, {
       headers: {
       Authorization: `Bearer ${accessToken}`
       }
