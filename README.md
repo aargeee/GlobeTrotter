@@ -17,7 +17,7 @@ This application is a Tourist Destination Quiz Game, providing users with an eng
 
 - **Frontend:** Vite, React, JavaScript, CSS
 - **Backend:** Django, Python
-- **Database:** MongoDB
+- **Database:** Sqlite3
 
 ### Frontend Details
 
@@ -86,47 +86,6 @@ The backend is built using Django, a high-level Python web framework that encour
 - **GET /api/game/high_score/<str:username>/**: Get the high score for a specific user
 - **POST /api/destination/generate/**: Generate a new destination
 
-## Mock Data
-
-### Sample Quiz
-
-```json
-{
-  "title": "European Capitals",
-  "description": "Test your knowledge of European capitals.",
-  "questions": [
-    {
-      "question": "What is the capital of France?",
-      "options": ["Paris", "Berlin", "Madrid", "Rome"],
-      "answer": "Paris"
-    },
-    {
-      "question": "What is the capital of Germany?",
-      "options": ["Vienna", "Berlin", "Zurich", "Amsterdam"],
-      "answer": "Berlin"
-    }
-  ]
-}
-```
-
-### Sample GameScore
-
-```json
-{
-  "correct_answers": 15,
-  "total_questions": 20,
-  "percentage": 75
-}
-```
-
-## Contributing
-
-We welcome contributions! Please read our [contributing guidelines](CONTRIBUTING.md) for more details.
-
-## License
-
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
-
 ## Contact
 
-For any questions or feedback, please contact us at support@touristquizgame.com.
+For any questions or feedback, please contact at dev.rahulgoel@gmail.com
