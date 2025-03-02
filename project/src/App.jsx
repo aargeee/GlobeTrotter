@@ -75,7 +75,7 @@ function App() {
           <div className={`app ${animating ? 'fade-out' : ''}`}>
             <div className="header">
               <div className="creator-info animate-slide-in-left">
-                Created by <a href="https://github.com/yourusername" target="_blank" rel="noopener noreferrer">Your Name</a>
+                Created by <a href="https://github.com/aargeee" target="_blank" rel="noopener noreferrer">aargeee</a>
               </div>
               <button className="profile-btn animate-slide-in-right" onClick={handleProfile}>Profile</button>
             </div>
