@@ -68,7 +68,7 @@ The backend is built using Django, a high-level Python web framework that encour
     ```sh
     cp .env.example .env
     ```
-    Update the `.env` file with your MongoDB URI and other necessary configurations.
+    Update the `.env` file with necessary configurations.
 4. Start the server:
     ```sh
     python manage.py runserver
