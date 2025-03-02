@@ -4,6 +4,8 @@
 
 ## API documentation
 Link to Backend Service's [swagger documentation](https://aargeee2.pythonanywhere.com/api/schema/docs)
+### Data Generation pipeline
+![Untitled Diagram drawio (2)](https://github.com/user-attachments/assets/1193ad4f-e3b1-4cc5-b6c7-c80d8e0b0598)
 
 ## Overview
 
