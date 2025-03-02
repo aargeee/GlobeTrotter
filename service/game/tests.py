@@ -157,7 +157,8 @@ class GameViewTests(APITestCase):
         access_token = self.get_access_token(self.admin_user)
         self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + access_token)
         url = reverse('add_destination')
-        response = self.client.post(url, {'city': 'NewCity', 'country': 'NewCountry', 'clues': ['Clue1', 'Clue2'], 'fun_fact': ['Fact1'], 'trivia': ['Trivia1']})
+        response = self.client.post(url, {'city': 'NewCity', 'country': 'NewCountry', 'clues': ['Clue1', 'Clue2'], 'fun_facts': ['Fact1'], 'trivia': ['Trivia1']})
+        print(response.data)
         self.assertEqual(response.status_code, 201)
 
     def test_new_game(self):
