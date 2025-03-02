@@ -47,7 +47,7 @@ class Game(models.Model):
     is_active = models.BooleanField(default=True)
 
     def __str__(self):
-        return f"{self.player} at {self.score}"
+        return f"{self.player} at {self.id}"
 
     def get_score(self) -> GameScore:
         total_questions = Question.objects.filter(game=self).count()
