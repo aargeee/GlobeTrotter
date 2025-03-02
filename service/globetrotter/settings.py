@@ -12,14 +12,15 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 import os
 from dotenv import load_dotenv
-
-load_dotenv()
-
 from pathlib import Path
 from datetime import timedelta
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+project_folder = os.path.expanduser(BASE_DIR)  # adjust as appropriate
+load_dotenv(os.path.join(project_folder, '.env'))
+
+
+# Build paths inside the project like this: BASE_DIR / 'subdir'.
 
 
 # Quick-start development settings - unsuitable for production
@@ -31,7 +32,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["aargeee2.pythonanywhere.com"]
+ALLOWED_HOSTS = ["aargeee2.pythonanywhere.com", '127.0.0.1', 'localhost']
 
 
 # Application definition
