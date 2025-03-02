@@ -1,4 +1,6 @@
-# Tourist Destination Quiz Game
+# GlobeTrotter Game
+
+![globe-trotter-rose vercel app_](https://github.com/user-attachments/assets/738b026d-c3fc-4532-8d4b-f63cbaa61e59)
 
 ## Overview
 
