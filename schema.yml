@@ -1,0 +1,167 @@
+openapi: 3.0.3
+info:
+  title: GlobeTrotter
+  version: 1.0.0
+  description: GlobeTrotter API
+paths:
+  /api/admin/token/:
+    post:
+      operationId: api_admin_token_create
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/cities/:
+    get:
+      operationId: api_cities_retrieve
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/destination/:
+    post:
+      operationId: api_destination_create
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/game/:
+    post:
+      operationId: api_game_create
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/game/{game_id}/questions/:
+    get:
+      operationId: api_game_questions_retrieve
+      parameters:
+      - in: path
+        name: game_id
+        schema:
+          type: string
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/game/{game_id}/response/:
+    post:
+      operationId: api_game_response_create
+      parameters:
+      - in: path
+        name: game_id
+        schema:
+          type: string
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/game/{game_id}/score/:
+    get:
+      operationId: api_game_score_retrieve
+      parameters:
+      - in: path
+        name: game_id
+        schema:
+          type: string
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/game/high_score/:
+    get:
+      operationId: api_game_global_high_score_retrieve
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/game/high_score/{username}/:
+    get:
+      operationId: api_game_high_score_retrieve_2
+      parameters:
+      - in: path
+        name: username
+        schema:
+          type: string
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/profile/:
+    get:
+      operationId: api_profile_retrieve
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/signup/:
+    post:
+      operationId: api_signup_create
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/token/:
+    post:
+      operationId: api_token_create
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/token/refresh/:
+    post:
+      operationId: api_token_refresh_create
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+components:
+  securitySchemes:
+    jwtAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: Token-based authentication with required prefix "JWT"
