@@ -148,11 +148,30 @@ class AddDestinationView(APIView):
         Adds a new destination with the provided city, country, clues, fun facts, and trivia.
         """
         data = request.data
+
+        if not data:
+            return Response({'message': 'Data is required.'}, status=status.HTTP_400_BAD_REQUEST)
+
         city = data.get('city')
         country = data.get('country')
-        clues = data.get('clues', [])
-        fun_facts = data.get('fun_fact', [])
-        trivia = data.get('trivia', [])
+        clues = data.get('clues')
+        fun_facts = data.get('fun_facts')
+        trivia = data.get('trivia')
+
+        if not city:
+            return Response({'message': 'City is required.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        if not country:
+            return Response({'message': 'Country is required.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        if not clues:
+            return Response({'message': 'Clues are required.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        if not fun_facts:
+            return Response({'message': 'Fun facts are required.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        if not trivia:
+            return Response({'message': 'Trivia are required.'}, status=status.HTTP_400_BAD_REQUEST)
 
         destination, created = Destination.objects.get_or_create(city=city, country=country)
 
@@ -166,7 +185,14 @@ class AddDestinationView(APIView):
             DestinationInfo.objects.create(destination=destination, info=trivium, type=DestinationInfo.InfoType.TRIVIA)
 
         return Response({
-            'message': 'Destination and related info created successfully.'
+            'message': 'Destination and related info created successfully.',
+            'data': {
+                'city': city,
+                'country': country,
+                'clues': clues,
+                'fun_facts': fun_facts,
+                'trivia': trivia
+            }
         }, status=status.HTTP_201_CREATED)
 
 class NewGameView(APIView):
@@ -338,3 +364,76 @@ class ListCitiesView(APIView):
         """
         cities = Destination.objects.values_list('city', flat=True)
         return Response({'cities': list(cities)}, status=status.HTTP_200_OK)
+
+import google.generativeai as genai
+import os
+
+class GenerateDestinationView(APIView):
+    """
+    API view to generate a new destination using Google GenAI.
+    """
+    serializer_class = serializers.Serializer
+    permission_classes = [IsAdminUser]
+
+    def post(self, request, *args, **kwargs):
+        """
+        Generates a new destination with the provided city using Google GenAI.
+        """
+        city = request.data.get('city')
+        if not city:
+            return Response({'message': 'City is required.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        genai.configure(api_key=os.environ.get('GOOGLE_GENAI_API_KEY'))
+        model = genai.GenerativeModel('gemini-2.0-flash')
+
+        prompt = f"Generate information about the city: {city}. Include 5 clues to guess the city, the country of the city, 4 fun facts, and 4 trivia statements (not questions). Keep it fun and engaging. For example, you can add emojis."
+        prompt += "Respond with a JSON object with the following keys: city, country, clues, fun_facts, trivia.\n"
+        prompt += "Example JSON:\n"
+        prompt += "{\n"
+        prompt += "  \"city\": \"City Name\",\n"
+        prompt += "  \"country\": \"Country Name\",\n"
+        prompt += "  \"clues\": [\"Clue 1\", \"Clue 2\", \"Clue 3\", \"Clue 4\", \"Clue 5\"],\n"
+        prompt += "  \"fun_facts\": [\"Fun Fact 1\", \"Fun Fact 2\", \"Fun Fact 3\", \"Fun Fact 4\"],\n"
+        prompt += "  \"trivia\": [\"Trivia 1\", \"Trivia 2\", \"Trivia 3\", \"Trivia 4\"]\n"
+        prompt += "}\n"
+
+        try:
+            response = model.generate_content(prompt)
+            content = response.text
+            print(content)
+
+            import json
+            try:
+                data = json.loads("".join(content.split('\n')[1:-1]))
+                city = data.get('city')
+                country = data.get('country')
+                clues = data.get('clues', [])
+                fun_facts = data.get('fun_facts', [])
+                trivia = data.get('trivia', [])
+
+                destination, created = Destination.objects.get_or_create(city=city, country=country)
+
+                for clue in clues:
+                    DestinationInfo.objects.create(destination=destination, info=clue, type=DestinationInfo.InfoType.CLUE)
+
+                for fact in fun_facts:
+                    DestinationInfo.objects.create(destination=destination, info=fact, type=DestinationInfo.InfoType.FUN_FACT)
+
+                for trivium in trivia:
+                    DestinationInfo.objects.create(destination=destination, info=trivium, type=DestinationInfo.InfoType.TRIVIA)
+
+                return Response({
+                    'message': 'Destination and related info created successfully using Google GenAI.',
+                    'data': {
+                        'city': city,
+                        'country': country,
+                        'clues': clues,
+                        'fun_facts': fun_facts,
+                        'trivia': trivia,
+                    }
+                }, status=status.HTTP_201_CREATED)
+            except json.JSONDecodeError as e:
+                return Response({'message': f'Error decoding JSON: {e}'}, status=status.HTTP_400_BAD_REQUEST)
+
+        except Exception as e:
+            return Response({'message': f'Error generating destination: {e}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
