@@ -2,6 +2,9 @@
 
 ![globe-trotter-rose vercel app_](https://github.com/user-attachments/assets/738b026d-c3fc-4532-8d4b-f63cbaa61e59)
 
+## API documentation
+Link to Backend Service's [swagger documentation](https://aargeee2.pythonanywhere.com/api/schema/docs)
+
 ## Overview
 
 This application is a Tourist Destination Quiz Game, providing users with an engaging way to test their knowledge about various tourist destinations around the world. The backend service provides endpoints for managing quizzes, questions, user profiles, and scores.
