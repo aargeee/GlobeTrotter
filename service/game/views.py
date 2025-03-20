@@ -282,6 +282,7 @@ class GameScoreView(APIView):
     API view to retrieve the score for a game.
     """
     serializer_class = GameScoreSerializer
+    authentication_classes = []
     def get(self, request, game_id, *args, **kwargs):
         """
         Retrieves the score for the specified game.
@@ -304,6 +305,7 @@ class GameHighScoreView(APIView):
     """
     API view to retrieve the global high score.
     """
+    authentication_classes = []
     def get(self, request, *args, **kwargs):
         """
         Retrieves the global high score.
