@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Destination, DestinationInfo, Game, Question
+from .models import Destination, DestinationInfo, Game, Question, Difficulty
 
 class DestinationInfoInline(admin.TabularInline):
     model = DestinationInfo
@@ -19,3 +19,4 @@ admin.site.register(Destination, DestinationAdmin)
 admin.site.register(DestinationInfo)
 admin.site.register(Game, GameAdmin)
 admin.site.register(Question)
+admin.site.register(Difficulty)

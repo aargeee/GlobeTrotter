@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const BASE_URL = 'https://aargeee2.pythonanywhere.com';
+const BASE_URL = 'http://localhost:8000';
 
 // Mock user data
 const mockUserData = {

@@ -1,6 +1,6 @@
 from django.urls import path
 from .views import UnregisteredUserTokenView, UnregisteredUserTokenRefreshView, NewGameView, GameQuestionsView, AddDestinationView, AdminTokenView, GameResponseView, GameHighScoreView, GameHighScoreUserView
-from .views import GameScoreView, SignupView, ProfileView, ListCitiesView, GenerateDestinationView
+from .views import GameScoreView, SignupView, ProfileView, ListCitiesView, GenerateDestinationView, LeaderboardView
 
 urlpatterns = [
     path('token/', UnregisteredUserTokenView.as_view(), name='unregistered_user_token'),
@@ -17,4 +17,5 @@ urlpatterns = [
     path('game/high_score/', GameHighScoreView.as_view(), name='game_high_score'),
     path('game/high_score/<str:username>/', GameHighScoreUserView.as_view(), name='game_high_score_user'),
     path('destination/generate/', GenerateDestinationView.as_view(), name='generate_destination'),
+    path('leaderboard/', LeaderboardView.as_view(), name='leaderboard'),
 ]

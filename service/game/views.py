@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
-from .models import Game, Question, Destination, DestinationInfo
+from .models import Game, Question, Destination, DestinationInfo, Difficulty
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.views import APIView
@@ -9,6 +9,7 @@ from rest_framework import status
 from rest_framework.exceptions import AuthenticationFailed
 import uuid
 from .serializers import GameScoreSerializer
+from random import shuffle
 
 from rest_framework import serializers
 
@@ -147,6 +148,7 @@ class AddDestinationView(APIView):
             return Response({'message': 'Data is required.'}, status=status.HTTP_400_BAD_REQUEST)
 
         city = data.get('city')
+        difficulty = data.get('difficulty')
         country = data.get('country')
         clues = data.get('clues')
         fun_facts = data.get('fun_facts')
@@ -154,6 +156,9 @@ class AddDestinationView(APIView):
 
         if not city:
             return Response({'message': 'City is required.'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        if not difficulty:
+            return Response({'message': 'difficulty is required.'}, status=status.HTTP_400_BAD_REQUEST)
 
         if not country:
             return Response({'message': 'Country is required.'}, status=status.HTTP_400_BAD_REQUEST)
@@ -167,7 +172,8 @@ class AddDestinationView(APIView):
         if not trivia:
             return Response({'message': 'Trivia are required.'}, status=status.HTTP_400_BAD_REQUEST)
 
-        destination, created = Destination.objects.get_or_create(city=city, country=country)
+        diff_obj = Difficulty.objects.filter(name=difficulty).first()
+        destination, created = Destination.objects.get_or_create(city=city, country=country, difficulty=diff_obj)
 
         for clue in clues:
             DestinationInfo.objects.create(destination=destination, info=clue, type=DestinationInfo.InfoType.CLUE)
@@ -185,7 +191,8 @@ class AddDestinationView(APIView):
                 'country': country,
                 'clues': clues,
                 'fun_facts': fun_facts,
-                'trivia': trivia
+                'trivia': trivia,
+                "difficulty": difficulty
             }
         }, status=status.HTTP_201_CREATED)
 
@@ -201,7 +208,13 @@ class NewGameView(APIView):
         user = request.user
         if not user.is_authenticated:
             raise AuthenticationFailed('User is not authenticated')
-        game = Game.objects.create(player=user)
+        
+        difficulty_inp = request.data.get('difficulty', "")
+        difficulty = Difficulty.objects.filter(name=difficulty_inp).first()
+        if not difficulty:
+            return Response({'message': 'Difficulty is required.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        game = Game.objects.create(player=user, difficulty=difficulty)
         return Response({
             'game_id': str(game.id),
         }, status=status.HTTP_201_CREATED)
@@ -235,9 +248,15 @@ class GameQuestionsView(APIView):
                 }, status=status.HTTP_200_OK)
 
         clues = question.clues.all()
+        answer = question.destination.city
+        other_options = list(Destination.objects.values_list('city', flat=True).exclude(city=answer))
+        shuffle(other_options)
+        options = [answer] + other_options[:3]
+        shuffle(options)
         return Response({
             'clues': [clue.info for clue in clues],
             'is_active': game.is_active,
+            "options": options
         }, status=status.HTTP_200_OK)
     
 class GameResponseView(APIView):
@@ -321,6 +340,35 @@ class GameHighScoreView(APIView):
             'username': None,
             'high_score': 0,
         }, status=status.HTTP_200_OK)
+
+class LeaderboardView(APIView):
+    """
+    API view to retrieve the leaderboard.
+    """
+    permission_classes = []
+    def post(self, request, *args, **kwargs):
+        """
+        Retrieves the leaderboard with the top 10 players.
+        """
+        difficulty = request.data.get('difficulty', None)
+        page = request.data.get('page', 0)
+        per_page = request.data.get("per_page", 10)
+        if not difficulty:
+            return Response({'message': 'Difficulty is required.'}, status=status.HTTP_400_BAD_REQUEST)
+        difficulty_obj = Difficulty.objects.filter(name=difficulty).first()
+        if not difficulty_obj:
+            return Response({'message': 'Invalid difficulty.'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        scores = Game.get_leaderboard(difficulty_obj, page, per_page)
+        return Response({
+            'leaderboard': [{
+                "player": score.player.username,
+                "score": score.score.correct_answers,
+            } for score in scores],
+            "page": page,
+            "per_page": per_page
+        }, status=status.HTTP_200_OK) 
+
 
 class GameHighScoreUserView(APIView):
     """
