@@ -16,7 +16,6 @@ class UnregisteredUserTokenView(APIView):
     """
     API view to generate tokens for unregistered users.
     """
-    serializer_class = serializers.Serializer
     permission_classes = []
     def post(self, request, *args, **kwargs):
         """
@@ -34,7 +33,6 @@ class UnregisteredUserTokenRefreshView(APIView):
     """
     API view to refresh tokens for unregistered users.
     """
-    serializer_class = serializers.Serializer
     permission_classes = []
     def post(self, request, *args, **kwargs):
         """
@@ -58,7 +56,6 @@ class SignupView(APIView):
     """
     API view to sign up a user.
     """
-    serializer_class = serializers.Serializer
     permission_classes = [IsAuthenticated]
     def post(self, request, *args, **kwargs):
         """
@@ -98,7 +95,6 @@ class ProfileView(APIView):
     """
     API view to retrieve the user profile.
     """
-    serializer_class = serializers.Serializer
     permission_classes = [IsAuthenticated]
     def get(self, request, *args, **kwargs):
         """
@@ -119,7 +115,6 @@ class AdminTokenView(APIView):
     """
     API view to generate tokens for admin users.
     """
-    serializer_class = serializers.Serializer
     permission_classes = []
     def post(self, request, *args, **kwargs):
         """
@@ -141,7 +136,6 @@ class AddDestinationView(APIView):
     """
     API view to add a new destination.
     """
-    serializer_class = serializers.Serializer
     permission_classes = [IsAdminUser]
     def post(self, request, *args, **kwargs):
         """
@@ -199,7 +193,6 @@ class NewGameView(APIView):
     """
     API view to create a new game.
     """
-    serializer_class = serializers.Serializer
     permission_classes = [IsAuthenticated]
     def post(self, request, *args, **kwargs):
         """
@@ -217,7 +210,6 @@ class GameQuestionsView(APIView):
     """
     API view to retrieve questions for a game.
     """
-    serializer_class = serializers.Serializer
     permission_classes = [IsAuthenticated]
 
     def get(self, request, game_id, *args, **kwargs):
@@ -312,8 +304,6 @@ class GameHighScoreView(APIView):
     """
     API view to retrieve the global high score.
     """
-    serializer_class = serializers.Serializer
-    permission_classes = [IsAuthenticated]
     def get(self, request, *args, **kwargs):
         """
         Retrieves the global high score.
@@ -335,8 +325,6 @@ class GameHighScoreUserView(APIView):
     """
     API view to retrieve a user's high score.
     """
-    serializer_class = serializers.Serializer
-    permission_classes = [IsAuthenticated]
     def get(self, request, username, *args, **kwargs):
         """
         Retrieves the high score for the specified user.
@@ -356,7 +344,6 @@ class ListCitiesView(APIView):
     """
     API view to list all cities.
     """
-    serializer_class = serializers.Serializer
     permission_classes = [IsAuthenticated]
     def get(self, request, *args, **kwargs):
         """
@@ -372,7 +359,6 @@ class GenerateDestinationView(APIView):
     """
     API view to generate a new destination using Google GenAI.
     """
-    serializer_class = serializers.Serializer
     permission_classes = [IsAdminUser]
 
     def post(self, request, *args, **kwargs):
