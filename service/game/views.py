@@ -326,8 +326,9 @@ class GameHighScoreUserView(APIView):
     """
     API view to retrieve a user's high score.
     """
-    permission_classes = []
-    def get(self, request, username):
+    authentication_classes = [] 
+    permission_classes = [] 
+    def get(self, request, username, *args, **kwargs):
         """
         Retrieves the high score for the specified user.
         """
